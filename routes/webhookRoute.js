@@ -3,6 +3,6 @@ import { webhookController } from "../controllers/webhookController";
 
 const router = express.Router();
 
-router.get("", webhookController);
+router.post("", webhookController);
 
 export default router;
