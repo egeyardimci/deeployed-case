@@ -1,4 +1,6 @@
+import { PR_DESCRIPTION_SYSTEM_PROMPT } from "../constants";
 import { getPRCommits, getPRDiff } from "./githubAPIService";
+import { callLLMService } from "./llmService";
 
 export const generatePRDescription = async (
   installationId,
@@ -33,9 +35,36 @@ export const generatePRDescription = async (
 };
 
 const generatePRDescriptionWithLLM = async (context) => {
-  // Placeholder for LLM integration
-  // In a real implementation, this would call an LLM API like OpenAI's GPT
-  return `Generated PR Description based on context: ${JSON.stringify(
-    context
-  )}`;
+  const systemPrompt = PR_DESCRIPTION_SYSTEM_PROMPT;
+  const userQuery = generatePRPrompt(context);
+
+  const llmResponse = await callLLMService(systemPrompt, userQuery);
+  return llmResponse;
+};
+
+const generatePRPrompt = (context) => {
+  return `Generate a pull request description based on the following information:
+
+**PR Title:** ${context.title}
+**Author:** ${context.author}
+**Base Branch:** ${context.baseBranch}
+**Head Branch:** ${context.headBranch}
+
+**Statistics:**
+- ${context.stats.additions} additions
+- ${context.stats.deletions} deletions
+- ${context.stats.changedFiles} file(s) changed
+- ${context.stats.commits} commit(s)
+
+**Commit Messages:**
+\`\`\`
+${context.commitMessages}
+\`\`\`
+
+**Code Changes (Unified Diff):**
+\`\`\`diff
+${context.diff}
+\`\`\`
+
+Please generate a clear, professional PR description following the guidelines provided.`;
 };
