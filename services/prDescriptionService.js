@@ -1,14 +1,18 @@
-export const generatePRDescription = async (pull_request) => {
-  // 1. Fetch the diff
-  const diffResponse = await fetch(pull_request.diff_url);
-  const diffText = await diffResponse.text();
+import { getPRCommits, getPRDiff } from "./githubAPIService";
 
-  // 2. Fetch commit messages
-  const commitsResponse = await fetch(pull_request.commits_url);
-  const commits = await commitsResponse.json();
-  const commitMessages = commits.map((c) => c.commit.message).join("\n");
+export const generatePRDescription = async (
+  installationId,
+  owner,
+  repo,
+  pull_request
+) => {
+  // 1. Get PR diff and commits
+  const [diff, commits] = await Promise.all([
+    getPRDiff(installationId, owner, repo, pull_request.number),
+    getPRCommits(installationId, owner, repo, pull_request.number),
+  ]);
 
-  // 3. Prepare context for LLM
+  // 2. Prepare context for LLM
   const context = {
     title: pull_request.title,
     author: pull_request.user.login,
@@ -18,13 +22,20 @@ export const generatePRDescription = async (pull_request) => {
       additions: pull_request.additions,
       deletions: pull_request.deletions,
       changedFiles: pull_request.changed_files,
-      commits: pull_request.commits,
     },
-    commitMessages,
-    diff: diffText,
+    commitMessages: commits.map((c) => c.commit.message).join("\n"),
+    diff: diff,
   };
 
-  // 4. Generate description with LLM
-  console.log("PR context:", context);
-  return "some description";
+  // 3. Generate description with LLM
+  const description = await generatePRDescriptionWithLLM(context);
+  return description;
+};
+
+const generatePRDescriptionWithLLM = async (context) => {
+  // Placeholder for LLM integration
+  // In a real implementation, this would call an LLM API like OpenAI's GPT
+  return `Generated PR Description based on context: ${JSON.stringify(
+    context
+  )}`;
 };
