@@ -25,7 +25,7 @@ EXPOSE 3000
 ENV GITHUB_APP_ID=""
 ENV GITHUB_PRIVATE_KEY_PATH="./private-key.pem"
 ENV GROQ_API_KEY=""
-ENV SMEE_URL="https://smee.io/sS7gEbqd6ln6Wqd"
+ENV SMEE_URL=""
 ENV PORT=3000
 
 # Create an entrypoint script to run both smee and the app
