@@ -2,7 +2,7 @@
 
 This project is a webhook bot that automatically enriches GitHub Pull Requests with descriptions. When a PR is opened, the bot automatically analyzes commit messages and code changes, using an LLM (Groq) to generate a professional PR description.
 
-Live deployed at https://deeployed-case-latest.onrender.com, go to the link and make sure the server is not sleeping (Railway free tier) then open PR to https://github.com/egeyardimci/deeployed-case-test and try!
+Live deployed at https://deeployed-case-latest.onrender.com, go to the link and make sure the server is not sleeping (Render free tier) then open PR to https://github.com/egeyardimci/deeployed-case-test and try!
 
 Sample PR: https://github.com/egeyardimci/deeployed-case-test/pull/3
 
