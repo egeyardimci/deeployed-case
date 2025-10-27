@@ -30,7 +30,7 @@ ENV PORT=3000
 
 # Create an entrypoint script to run both smee and the app
 RUN echo '#!/bin/sh' > /app/entrypoint.sh && \
-    echo 'smee --url $SMEE_URL --path /webhook &' >> /app/entrypoint.sh && \
+    echo 'smee --url $SMEE_URL --port 3000 --path /webhook &' >> /app/entrypoint.sh && \
     echo 'bun run index.js' >> /app/entrypoint.sh && \
     chmod +x /app/entrypoint.sh
 
