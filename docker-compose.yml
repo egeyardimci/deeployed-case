@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - GITHUB_APP_ID=${GITHUB_APP_ID}
+      - GITHUB_PRIVATE_KEY_PATH=/app/private-key.pem
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - SMEE_URL=https://smee.io/sS7gEbqd6ln6Wqd
+      - PORT=3000
+    volumes:
+      - ./private-key.pem:/app/private-key.pem:ro
+    restart: unless-stopped
