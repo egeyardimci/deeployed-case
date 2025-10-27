@@ -2,6 +2,8 @@
 
 This project is a webhook bot that automatically enriches GitHub Pull Requests with descriptions. When a PR is opened, the bot automatically analyzes commit messages and code changes, using an LLM (Groq) to generate a professional PR description.
 
+Live deployed at https://deeployed-case-latest.onrender.com open PR to https://github.com/egeyardimci/deeployed-case-test and try!
+
 ## Features
 
 - Automatically triggers when a GitHub Pull Request is opened
@@ -90,6 +92,7 @@ Edit the `.env` file:
 GITHUB_APP_ID=123456                              # Your GitHub App ID
 GITHUB_PRIVATE_KEY_PATH=./private-key.pem         # Private key file path
 GROQ_API_KEY=your-groq-api-key-here              # Your Groq API key
+SMEE_URL=your-smee-url                            # Your SMEE URL
 ```
 
 ## Running
@@ -104,17 +107,63 @@ bun run index.js
 
 The server will start at `http://localhost:3000`.
 
-#### Method 2: Run with Docker
+#### Method 2: Run with Docker Compose (Recommended)
 
-1. Run with Docker Compoese
+1. Make sure your `.env` file is configured with all required variables
+2. Ensure your `private-key.pem` file is in the project root
+3. Run with Docker Compose:
 
 ```bash
-# Build and start the container
-docker-compose up --build
-
-# Or run in detached mode (background)
-docker-compose up -d --build
+docker-compose up -d
 ```
+
+To view logs:
+
+```bash
+docker-compose logs -f
+```
+
+To stop the container:
+
+```bash
+docker-compose down
+```
+
+#### Method 3: Run with Docker
+
+1. Build the Docker image:
+
+```bash
+docker build -t pr-description-bot .
+```
+
+2. Run the container:
+
+**Linux/Mac:**
+
+```bash
+docker run -p 3000:3000 \
+  -e GITHUB_APP_ID=your_app_id \
+  -e GITHUB_PRIVATE_KEY_PATH=./private-key.pem \
+  -e GROQ_API_KEY=your_groq_api_key \
+  -e SMEE_URL=your_smee_url \
+  -v $(pwd)/private-key.pem:/app/private-key.pem \
+  pr-description-bot
+```
+
+**Windows PowerShell:**
+
+```bash
+docker run -d `
+  -e GITHUB_APP_ID=your_app_id `
+  -e GITHUB_PRIVATE_KEY_PATH=./private-key.pem `
+  -e GROQ_API_KEY=your_groq_api_key `
+  -e SMEE_URL=your_smee_url `
+  -v ${PWD}/private-key.pem:/app/private-key.pem `
+  pr-description-bot
+```
+
+**Note:** When running with Docker, don't forget to mount the private key file as a volume.
 
 ## Webhook Setup
 
@@ -172,6 +221,8 @@ bun run test:watch
 # Test with coverage report
 bun run test:coverage
 ```
+
+For detailed information about the test suite, test structure, and writing new tests, see the [Tests Documentation](tests/README.md).
 
 ## Project Structure
 
