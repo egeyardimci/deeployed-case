@@ -24,7 +24,6 @@ export const callLLMService = async (systemPrompt, userQuery) => {
       top_p: 1,
       stream: false,
     });
-
     return (
       chatCompletion.choices[0]?.message?.content || "No description generated"
     );

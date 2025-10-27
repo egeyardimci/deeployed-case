@@ -41,3 +41,5 @@ coverage/
 .cache/
 
 private-key.pem
+
+.claude
